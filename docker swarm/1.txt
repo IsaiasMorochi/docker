@@ -1,0 +1,65 @@
+/ # docker swarm init
+Swarm initialized: current node (nmvttkapsdwqjuho0mewrz6p3) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-1c4s2e6aohwmwa52aruehhb4o3wf10pcp47qqfzpytgx49b01n-d0jklsh841ptsq2jlv14bxvrg 192.168.0.18:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+/ # docker swarm join-token manager
+To add a manager to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-1c4s2e6aohwmwa52aruehhb4o3wf10pcp47qqfzpytgx49b01n-2ip1x1g4tf3j9872ssg3hdoq9 192.168.0.18:2377
+
+/ # docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+nmvttkapsdwqjuho0mewrz6p3 *   ubuntu              Ready               Active              Leader              18.09.5
+
+/ # docker node inspect --pretty self
+ID:                     nmvttkapsdwqjuho0mewrz6p3
+Hostname:               ubuntu
+Joined at:              2019-04-27 21:52:14.536491476 +0000 utc
+Status:
+ State:                 Ready
+ Availability:          Active
+ Address:               192.168.0.18
+Manager Status:
+ Address:               192.168.0.18:2377
+ Raft Status:           Reachable
+ Leader:                Yes
+Platform:
+ Operating System:      linux
+ Architecture:          x86_64
+Resources:
+ CPUs:                  2
+ Memory:                1.924GiB
+Plugins:
+ Log:           awslogs, fluentd, gcplogs, gelf, journald, json-file, local, logentries, splunk, syslog
+ Network:               bridge, host, macvlan, null, overlay
+ Volume:                local
+Engine Version:         18.09.5
+TLS Info:
+ TrustRoot:
+-----BEGIN CERTIFICATE-----
+MIIBajCCARCgAwIBAgIUIIXuSFa4rcjgQfT00hz83zBo+sowCgYIKoZIzj0EAwIw
+EzERMA8GA1UEAxMIc3dhcm0tY2EwHhcNMTkwNDI3MjE0NzAwWhcNMzkwNDIyMjE0
+NzAwWjATMREwDwYDVQQDEwhzd2FybS1jYTBZMBMGByqGSM49AgEGCCqGSM49AwEH
+A0IABGBrer6fwcakmofGYmYbeDeapwET+7b6PCDXdBKB10i5N4NsTq2jnF6PSg+m
+5RF6CLp9goQBfw30KUJT4bh4g7SjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB
+Af8EBTADAQH/MB0GA1UdDgQWBBRTejMxm+Et9RjrH974RIqXSfqGuTAKBggqhkjO
+PQQDAgNIADBFAiBK78v5+Ddb9TUcvQ5u6WY7Pn6WuLYWw229Vv0oad3HtQIhAKms
+pK7UyXj+Tap0X8wo/k3CtEtNkScj78FWyogRIXJW
+-----END CERTIFICATE-----
+
+ Issuer Subject:        MBMxETAPBgNVBAMTCHN3YXJtLWNh
+ Issuer Public Key:     MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEYGt6vp/BxqSah8ZiZht4N5qnARP7tvo8INd0EoHXSLk3g2xOraOcXo9KD6blEXoIun2ChAF/DfQpQlPhuHiDtA==
+/ #
+//salir del modo swarm
+/ # docker swarm leave
+//si un worker node se va, dará error, podemos forzarlo.
+/ # docker swarm leave --force 
+
+
+
+/ # docker swarm init

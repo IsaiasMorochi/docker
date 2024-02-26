@@ -1,0 +1,38 @@
+
+/ # docker swarm init
+
+/ # docker service create --name pinger alpine ping www.google.com
+joh3amhxbimwuyx7tpqjnbeov
+overall progress: 1 out of 1 tasks
+1/1: running   [==================================================>]
+verify: Service converged
+/ # docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE               PORTS
+joh3amhxbimw        pinger              replicated          1/1                 alpine:latest
+/ # docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+30ea20515346        alpine:latest       "ping www.google.com"    33 seconds ago      Up 32 seconds                           pinger.1.n62rbswbbxk6foo50o724av63
+6c37fd44f671        docker:18.06.1-ce   "docker-entrypoint.s…"   26 minutes ago      Up 26 minutes                           docker-in
+/ #
+
+/ # docker service ps pinger
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
+n62rbswbbxk6        pinger.1            alpine:latest       ubuntu              Running             Running 4 minutes ago
+
+/ # docker service inspcet --pretty pinger
+
+/ # docker service logs -f pinger
+
+/ # docker service rm pinger
+pinger
+/ # docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+30ea20515346        alpine:latest       "ping www.google.com"    16 minutes ago      Up 16 minutes                           pinger.1.n62rbswbbxk6foo50o724av63
+6c37fd44f671        docker:18.06.1-ce   "docker-entrypoint.s…"   42 minutes ago      Up 42 minutes                           docker-in
+/ # docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+6c37fd44f671        docker:18.06.1-ce   "docker-entrypoint.s…"   43 minutes ago      Up 43 minutes                           docker-in
+/ #
+
+Al eliminar el servicio igual el contenedor se elimina despues de unos segundos.
+

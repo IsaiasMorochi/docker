@@ -1,0 +1,22 @@
+node {
+    stage('SCM Checkout'){
+        git credentialsId: 'git-creds', url: 'https://github.com/IsaiasMorochi/my-app.git'
+    }
+	stage('Mvn Package'){
+	 def mvnHome = tool name: 'maven-3', type: 'maven'
+     def mvnCMD = "${mvnHome}/bin/mvn"
+     sh "${mvnCMD} clean package"
+	}
+	stage('Build Docker Image'){
+     sh 'docker build -t isaiasdocker/my-app:0.0.2 .'
+    }
+	stage('Push Docker Image'){
+		withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPwd')]) {
+			sh "docker login -u isaiasdocker -p ${dockerHubPwd}"
+		}
+		sh 'docker push isaiasdocker/my-app:0.0.2'
+    }
+	stage('Run Container on Dev Server'){
+        sh 'docker run -p 8888:8080 -d --name my-app isaiasdocker/my-app:0.0.2'
+   }
+}

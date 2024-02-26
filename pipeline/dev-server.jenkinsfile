@@ -1,0 +1,45 @@
+
+node {
+    stage('SCM Checkout'){
+        git credentialsId: 'git-creds', url: 'https://github.com/IsaiasMorochi/my-app.git'
+    }
+	stage('Mvn Package'){
+	 def mvnHome = tool name: 'maven-3', type: 'maven'
+     def mvnCMD = "${mvnHome}/bin/mvn"
+     sh "${mvnCMD} clean package"
+	}
+	stage('Build Docker Image'){
+     sh 'docker build -t isaiasdocker/my-app:0.0.2 .'
+    }
+	stage('Push Docker Image'){
+		withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPwd')]) {
+			sh "docker login -u isaiasdocker -p ${dockerHubPwd}"
+		}
+		sh 'docker push isaiasdocker/my-app:0.0.2'
+    }
+	stage('Run Container on Dev Server'){
+        sh 'docker run -p 8888:8080 -d --name my-app isaias/my-app:0.0.2'
+   }
+}
+
+
+withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPwd')]) {
+    // some block
+}
+	stage('Run Container on Dev Server'){
+     def dockerRun = 'docker run -p 8888:8080 -d --name my-app isaias/my-app:0.0.2'
+     sshagent(['dev-server']) {
+       sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.18.198 ${dockerRun}"
+     }
+   }
+
+
+
+// https://www.youtube.com/watch?v=gdbA3vR2eDs
+// docker run -u root -d --name jenkins -p 8080:8080 -p 50000:50000 -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/usr/bin/docker -v /home/jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+// https://docs.mikelgoig.com/docker/comandos-importantes-de-docker.html#volumenes
+// https://medium.com/containers-101/using-docker-from-maven-and-maven-from-docker-1494238f1cf6
+// https://hub.docker.com/_/sonarqube/
+// https://medium.com/@khandelwal12nidhi/ci-cd-with-jenkins-and-ansible-e9163d4a6e82
+// https://blog.sonatype.com/continuous-integration-in-pipeline-as-code-environment-with-jenkins-jacoco-nexus-and-sonarqube
+ 

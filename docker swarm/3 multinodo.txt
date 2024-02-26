@@ -1,0 +1,127 @@
+
+Laboratorio
+https://labs.play-with-docker.com/p/bj2dk4ndu41g00fvtm10#bj2dk4nd_bj2dk6vdu41g00fvtm1g
+IP:  192.168.0.18 (MANAGER)
+
+
+docker swarm init  --advertise-addr 192.168.0.18
+Swarm initialized: current node (qxyui0d1hlv062mfy1b9hzpr5) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-50q10g1d88h7bwix1y7q13tpcdiuiyvvyae46ba29lv5kt5vtm-0lxvusb7l8qmncofz8f4j0a64 192.168.0.18:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+[node1] (local) root@192.168.0.18 ~
+$
+
+
+$ ###############################################################
+#                          WARNING!!!!                        #
+# This is a sandbox environment. Using personal credentials   #
+# is HIGHLY! discouraged. Any consequences of doing so are    #
+# completely the user's responsibilites.                      #
+#                                                             #
+# The PWD team.                                               #
+###############################################################
+[node2] (local) root@192.168.0.17 ~
+docker swarm join --token SWMTKN-1-50q10g1d88h7bwix1y7q13tpcdiuiyvvyae46ba29lv5kt5vtm-0lxvusb7l8qmncofz8f4j0a64 192.168.0.18:2377
+This node joined a swarm as a worker.
+[node2] (local) root@192.168.0.17 ~
+$
+
+$ ###############################################################
+#                          WARNING!!!!                        #
+# This is a sandbox environment. Using personal credentials   #
+# is HIGHLY! discouraged. Any consequences of doing so are    #
+# completely the user's responsibilites.                      #
+#                                                             #
+# The PWD team.                                               #
+###############################################################
+[node3] (local) root@192.168.0.16 ~
+docker swarm join --token SWMTKN-1-50q10g1d88h7bwix1y7q13tpcdiuiyvvyae46ba29lv5kt5vtm-0lxvusb7l8qmncofz8f4j0a64 192.168.0.18:2377
+This node joined a swarm as a worker.
+[node3] (local) root@192.168.0.16 ~
+
+
+
+MANAGER
+node1] (local) root@192.168.0.18 ~
+$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+qxyui0d1hlv062mfy1b9hzpr5 *   node1               Ready               Active              Leader              18.09.4
+zz0b4avtxri8vhvzrrxmqpa3f     node2               Ready               Active                  			18.09.4
+8m47w3w3wkczik6gy3hntgbjd     node3               Ready               Active                  18.09.4
+[node1] (local) root@192.168.0.18 ~
+
+$ docker service create --name pinger alpine ping www.google.com
+j47jle7vii4p7ddp4s05fd2ut
+overall progress: 1 out of 1 tasks1/1: running
+verify: Service converged[node1] (local) root@192.168.0.18 ~
+[node1] (local) root@192.168.0.18 ~
+
+$ docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE
+PORTSj47jle7vii4p   pinger              replicated          1/1                 alpine:lates
+t[node1] (local) root@192.168.0.18 ~
+
+$ docker service ps pinger
+ID      	 NAME        IMAGE       	NODE     DESIRED STATE       CURRENT STATE                ERROR               PORT
+Sg91swg31td27    pinger.1    alpine:latest      node1            Running     Running about a minute ago
+
+[node1] (local) root@192.168.0.18 ~
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                 CREATED             STATUS              PORTS               NAME
+Sfb873adba5e7       alpine:latest       "ping www.google.com"   3 minutes ago       Up 3 minutes                            pinger.1.g91swg31td27knvxnbgvg6gq2
+[node1] (local) root@192.168.0.18 ~$
+
+
+
+
+SERVICIOSN EN SCALA 
+[node1] (local) root@192.168.0.18 
+~$ docker service scale pinger=5
+
+pinger scaled to 5overall progress: 5 out of 5 tasks
+1/5: running   [==================================================>]2/5: running   [==================================================>]
+3/5: running   [==================================================>]
+4/5: running   [==================================================>]5/5: running   [==================================================>]
+verify: Service converged[node1] (local) root@192.168.0.1
+
+[node1] (local) root@192.168.0.18 ~
+$ docker service ps pinger
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE            ERROR PORT
+Sg91swg31td27       pinger.1            alpine:latest       node1               Running             Running 15 minutes ago
+338uq4gzlgq6        pinger.2            alpine:latest       node2               Running             Running 2 minutes ago
+9qz9vkxz231r        pinger.3            alpine:latest       node3               Running             Running 2 minutes ago
+wkggfxm5805t        pinger.4            alpine:latest       node3               Running             Running 2 minutes ago
+qgpe4er7ciwm        pinger.5            alpine:latest       node1               Running             Running 2 minutes ago
+[node1] (local) root@192.168.0.18 ~
+$
+
+[node1] (local) root@192.168.0.18 ~
+$ docker service logs -f pinger
+pinger.1.g91swg31td27@node1    | 64 bytes from 172.217.7.164: seq=1085 ttl=49 time=1.075 ms
+pinger.1.g91swg31td27@node1    | 64 bytes from 172.217.7.164: seq=1086 ttl=49 time=0.934 ms
+pinger.1.g91swg31td27@node1    | 64 bytes from 172.217.7.164: seq=1087 ttl=49 time=1.017 ms
+pinger.2.338uq4gzlgq6@node2    | 64 bytes from 172.217.7.196: seq=295 ttl=49 time=0.942 ms
+pinger.3.9qz9vkxz231r@node3    | 64 bytes from 172.217.7.164: seq=295 ttl=49 time=1.070 ms
+pinger.4.wkggfxm5805t@node3    | 64 bytes from 172.217.7.196: seq=295 ttl=49 time=1.408 ms
+
+$ docker service inspect pinger
+
+APUNTAMOS A OTRA URL ACTUALIZAMOS NUESTRO SERVICIO
+
+[node1] (local) root@192.168.0.18 ~
+$ docker service update --args "ping www.google.com" pinger
+pinger
+overall progress: 5 out of 5 tasks
+1/5: running   [==================================================>]
+2/5: running   [==================================================>]
+3/5: running   [==================================================>]
+4/5: running   [==================================================>]
+5/5: running   [==================================================>]
+verify: Service converged
+[node1] (local) root@192.168.0.18 ~
+$
