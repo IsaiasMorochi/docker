@@ -20,3 +20,29 @@ mvn sonar:sonar \
   -Dsonar.projectKey=mediapp-backend \
   -Dsonar.host.url=http://192.168.0.17:9000 \
   -Dsonar.login=ee89b200e50122df2f95fb3467cea5df5872fe87
+
+
+####################################################
+Fix elasticSearch -> [1]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+For MS Windows users, using wsl subsystem
+
+Open powershell, run
+  wsl -d docker-desktop
+then
+  sysctl -w vm.max_map_count=262144
+
+Iniciar docker-compose-v3.yml
+docker-compose -f docker-compose-v3.yml up -d
+
+user: admin
+pass: admin
+
+user: admin
+pass: sonar
+
+
+mvn clean verify sonar:sonar \
+  -Dsonar.projectKey=food-ordering-system \
+  -Dsonar.projectName='food-ordering-system' \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.token=sqp_8164b5b873e39c52dc2a2e61fed71a329b0180ff
